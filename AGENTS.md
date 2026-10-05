@@ -55,8 +55,9 @@ parse time.
 
 ## Architecture
 
-Two headers only: `objects.hpp` (every struct + every declaration; include it first) and
-`printing.hpp` (output formats, includes `objects.hpp`). All 16 `.cpp` live in `src/`.
+Three headers only: `objects.hpp` (every struct + every declaration; include it first),
+`printing.hpp` (output formats, includes `objects.hpp`) and `Constants.hpp` (physics
+constants and the `M_PI` fallback). All 16 `.cpp` live in `src/`.
 
 Flow: `main` (MPI init, parse, per-layer RNG seed) -> `Simulation::range`
 (`simulation_range.cpp`: iteration x hysteresis pass x range1 x range2 x time loop) ->
@@ -83,8 +84,10 @@ Joule heating -> save row).
 
 - `/////`-style banner comments separating sections; explain **why** above a function, not
   what. This codebase is heavily commented about MPI and filesystem correctness — match it.
-- Physics constants (`kB`, `gamma0`, `mu0`, `h_bar`, `e_charge`) are deliberately
-  re-declared per translation unit rather than centralised. Keep values identical.
+- Physics constants (`mu0`, `kB`, `gamma0`, `e_charge`, `h_bar`) live in `Constants.hpp`
+  and nowhere else. It also carries the `M_PI` fallback, which several files rely on
+  (`Ndip.cpp` alone uses it 36 times) — so don't strip it. Values must stay identical
+  across the codebase; they set the SI conversion factors the physics depends on.
 - `std::`-qualified names; only `main.cpp` and `Rand_dist.cpp` use `using namespace std`.
 - Indentation is mixed: tabs in `pulse.cpp`, `junction_init.cpp`, `Ndip.cpp`,
   `Rand_dist.cpp`; 4-space everywhere else. Match the file you edit.

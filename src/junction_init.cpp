@@ -2,13 +2,7 @@
 
 #include <cmath>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-const double mu0 = 4.0 * M_PI * 1.0e-7;
-const double e_charge = -1.60217733e-19;
-const double h_bar = 6.6262e-34 / (2.0 * M_PI);
+#include "Constants.hpp"
 
 namespace {
 
