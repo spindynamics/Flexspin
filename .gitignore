@@ -1,0 +1,26 @@
+# CMake build tree (out-of-source: cmake -S . -B build)
+build/
+build*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.o
+*.d
+*.a
+*.so
+
+# the built binary
+/Flexspin
+
+# Flexspin writes results into the current working directory, not the build tree
+out.evol
+1-State-Diagram.txt
+*K.evol
+*.evol
+
+# editors / IDEs
+*~
+.vscode/
+.idea/
+*.swp
