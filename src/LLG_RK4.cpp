@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-const double gamma0 = 2.210173e5; /*  m/(As)  */
+#include "Constants.hpp"
 
 /*******************************************************/
 void LLG_RK4(Junction& junction, int nlayer, int tot_layers, double dt)

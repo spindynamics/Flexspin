@@ -2,10 +2,10 @@
 
 #include <cmath>
 
-const double gamma0 = 2.210173e5; /*  m/(As)  */
+#include "Constants.hpp"
 
 /*******************************************************/
-void LLG_Heun2(Junction& junction, int nlayer, int tot_layers, double dt)
+void LLG_Heun1(Junction& junction, int nlayer, int tot_layers, double dt)
 {
     auto& l = junction.layers[nlayer];
     const double alpha = l.alpha;
@@ -16,12 +16,9 @@ void LLG_Heun2(Junction& junction, int nlayer, int tot_layers, double dt)
     /******** predictor step ***************/
     const Vec3 fp = (-gamma0 / denom) * (mp*l.Heff + alpha * mp*(mp*l.Heff));
 
-    //******** corrector step *************//
-    // Here this Heun2 is adapted to Heun1 for comparaison with other code
-    const Vec3 mc = mp + dt * fp;
-    l.m = mc;
-    CalcHeff(junction, nlayer, tot_layers);
 
+    /******** corrector step ***************/
+    const Vec3 mc = (mp + dt * fp);
     const Vec3 fc = (-gamma0 / denom) * (mc*l.Heff + alpha * mc*(mc*l.Heff));
 
     // Update m final

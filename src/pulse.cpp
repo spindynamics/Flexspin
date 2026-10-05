@@ -1,9 +1,7 @@
 #include "objects.hpp"
 #include <cmath>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include "Constants.hpp"
 
 double getValue(int i, double Val_Start, double Val_Stop, int NVal) noexcept {
 	if (NVal <= 1) return Val_Start;

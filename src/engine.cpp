@@ -2,8 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
-
-const double gamma0 = 2.210173e5; // m/(As) -- same constant as CalcHeff.cpp/LLG_*.cpp
+#include "Constants.hpp"
 
 // Advances every junction/layer by one step: pulse update, effective-field recompute, and
 // one LLG solver step per free layer. If saving is enabled, appends one row of every

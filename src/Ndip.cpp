@@ -1,10 +1,6 @@
 #include "objects.hpp"
-
 #include <cmath>
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include "Constants.hpp"
 
 typedef struct{
         	double x;
@@ -29,6 +25,7 @@ typedef struct{
 		double Lz;
 		double sigma;
 } surface_x;
+
 typedef struct{
        	double x0;
        	double y0;

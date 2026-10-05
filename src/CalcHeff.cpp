@@ -1,9 +1,6 @@
 #include "objects.hpp"
 #include <cmath>
-
-const double mu0 = 4.0 * M_PI * 1.0e-7;
-const double kB = 1.3806503e-23;
-const double gamma0 = 2.210173e5;
+#include "Constants.hpp"
 
 void CalcHeff(Junction& junction, int nlayer, int tot_layers)
 {

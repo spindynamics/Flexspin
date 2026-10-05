@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-const double gamma0 = 2.210173e5;
+#include "Constants.hpp"
 
 /********************************************************/
 void AdvanceIndividualSpin(Junction& junction, int nlayer, double timestep)
