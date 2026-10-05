@@ -48,6 +48,8 @@ Macrospin simulation of the static and dynamic magnetic properties of magnetic t
 
 ## Contributors
 * [Arthur Courberand](https://github.com/ArthurCourb)
+* [Pascal Thibaudeau](https://github.com/pthibaud)
+* [Liliana Prejbeanu](https://github.com/liliprejbeanu)
 
  
 Flexspin is governed by the CeCILL license under French law and abiding by the rules of distribution of free software. You can use, modify and/ or redistribute the software under the terms of the CeCILL license as circulated by CEA, CNRS and INRIA.
