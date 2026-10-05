@@ -1,12 +1,12 @@
 # Flexspin
-Flexspin is an open source software simulator, time resolving mutliple Landau-Lifchitz-Gilbert equation for highly configurable macrospin simualtion. Developped at the French Alternative Energies and Atomic Energy Commission, Flexspin is a macrospin simulation tool for exploring the dynamics of magnetic tunnel junction (MTJ) based systems. Initially developed for internal use, it is now being opened to serve as a general-purpose tool for the community, some features might be missing, don't hesitate to reach to the contributor or implement them yourself via forking.
+Flexspin is an open source software simulator, time resolving multiple Landau-Lifchitz-Gilbert equation for highly configurable macrospin simulation. Developed at the French Alternative Energies and Atomic Energy Commission, Flexspin is a macrospin simulation tool for exploring the dynamics of magnetic tunnel junction (MTJ) based systems. Initially developed for internal use, it is now being opened to serve as a general-purpose tool for the community, some features might be missing, don't hesitate to reach to the contributor or implement them yourself via forking.
 
 # Capabilities
-Macrospin simulation of the static and dynamic magnetic properties of magnetic tunnel junctions, including description of any number of macrospin layer, in any number of separeted junction. Thermally activated switching, spin-transfer torque driven dynamics via DC or AC bias (Current, Voltage, Field).
+Macrospin simulation of the static and dynamic magnetic properties of magnetic tunnel junctions, including description of any number of macrospin layer, in any number of separated junction. Thermally activated switching, spin-transfer torque driven dynamics via DC or AC bias (Current, Voltage, Field).
 
 ### General simulation framework
  A parallelized sweep usable via MPI for quicker simulation
- A continuous and hysteretic sweep for each MPI node
+ A continuous and hysteresis sweep for each MPI node
  End state or time step printing of physical parameters
 ### Simulation framework for each layer
  Stochastic Landau-Lifshitz-Gilbert-Slonczewski equation
