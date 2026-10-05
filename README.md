@@ -1,0 +1,1 @@
+Flexspin is an open source software simulator. Using Landau-Lifchitz-Gilbert equation for highly configurable macrospin simualtion.
