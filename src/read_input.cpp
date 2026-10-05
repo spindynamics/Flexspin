@@ -1,7 +1,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <stdexcept>
-
 #include "objects.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -9,12 +8,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 
 Vec3 readVec3(
-    json* j,
-    const std::string& kx,
-    const std::string& ky,
-    const std::string& kz,
-    std::ostream& log,
-    const std::string& label)
+    json *j,
+    const std::string &kx,
+    const std::string &ky,
+    const std::string &kz,
+    std::ostream &log,
+    const std::string &label)
 {
     Vec3 value{jsonDouble(jsonAt(j, kx)),
                jsonDouble(jsonAt(j, ky)),
@@ -27,7 +26,8 @@ Vec3 readVec3(
 //                                     Read functions                                //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-Layer Layer::fromJson(json* j, std::ostream& log, size_t junctionNumber, size_t layerIndex) {
+Layer Layer::fromJson(json *j, std::ostream &log, size_t junctionNumber, size_t layerIndex)
+{
     Layer l{};
     l.Ms = jsonDouble(jsonAt(j, "Ms (A/m)"));
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].Ms (A/m) = " << l.Ms << "\n";
@@ -49,19 +49,19 @@ Layer Layer::fromJson(json* j, std::ostream& log, size_t junctionNumber, size_t 
         log,
         "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].MCA axis");
     l.size = 1e-9 * readVec3(
-        jsonAt(j, "Layer Size (nm)"),"Lx","Ly","Lz",
-        log,
-        "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Layer Size (nm)");
+                        jsonAt(j, "Layer Size (nm)"), "Lx", "Ly", "Lz",
+                        log,
+                        "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Layer Size (nm)");
     l.center = 1e-9 * readVec3(
-        jsonAt(j, "Layer center (nm)"),"Cx","Cy","Cz",
-        log,
-        "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Layer center (nm)");
+                          jsonAt(j, "Layer center (nm)"), "Cx", "Cy", "Cz",
+                          log,
+                          "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Layer center (nm)");
     l.initial_m = readVec3(
-        jsonAt(j, "Initial magnetization"),"mx","my","mz",
+        jsonAt(j, "Initial magnetization"), "mx", "my", "mz",
         log,
         "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Initial magnetization");
     l.exchange_bias = readVec3(
-        jsonAt(j, "Exchange bias field (A/m)"),"Hx","Hy","Hz",
+        jsonAt(j, "Exchange bias field (A/m)"), "Hx", "Hy", "Hz",
         log,
         "junction[" + std::to_string(junctionNumber) + "].layer[" + std::to_string(layerIndex) + "].Exchange bias field (A/m)");
     l.vcmaKuCoeff =
@@ -71,27 +71,28 @@ Layer Layer::fromJson(json* j, std::ostream& log, size_t junctionNumber, size_t 
         jsonDouble(jsonAt(jsonAt(j, "VCMA (J/(m2*V))"), "Ku2Coeff"));
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].VCMA (J/(m2*V)).Ku2Coeff = " << l.vcmaKu2Coeff << "\n";
 
-    json* sttDamping = jsonAt(j, "STT Damping Like");
+    json *sttDamping = jsonAt(j, "STT Damping Like");
     l.sttDL.beta = jsonDouble(jsonAt(sttDamping, "beta"));
     l.sttDL.gamma = jsonDouble(jsonAt(sttDamping, "gamma"));
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].STT Damping Like.beta = " << l.sttDL.beta << "\n";
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].STT Damping Like.gamma = " << l.sttDL.gamma << "\n";
 
-    json* sttField = jsonAt(j, "STT Field Like");
+    json *sttField = jsonAt(j, "STT Field Like");
     l.sttFL.beta = jsonDouble(jsonAt(sttField, "beta"));
     l.sttFL.gamma = jsonDouble(jsonAt(sttField, "gamma"));
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].STT Field Like.beta = " << l.sttFL.beta << "\n";
     log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].STT Field Like.gamma = " << l.sttFL.gamma << "\n";
 
-    json* rkky = jsonAt(j, "RKKY (J/m2)");
-    json* rkkyIds = jsonAt(rkky, "layer_ID_from");
-    json* rkkyConstants = jsonAt(rkky, "Constant");
+    json *rkky = jsonAt(j, "RKKY (J/m2)");
+    json *rkkyIds = jsonAt(rkky, "layer_ID_from");
+    json *rkkyConstants = jsonAt(rkky, "Constant");
     size_t rkkyIdCount = jsonSize(rkkyIds);
     size_t rkkyConstCount = jsonSize(rkkyConstants);
     size_t rkkyCount = (rkkyIdCount < rkkyConstCount) ? rkkyIdCount : rkkyConstCount;
     l.rkky.layerIDFrom.reserve(rkkyCount);
     l.rkky.constant.reserve(rkkyCount);
-    for (size_t idx = 0; idx < rkkyCount; ++idx) {
+    for (size_t idx = 0; idx < rkkyCount; ++idx)
+    {
         l.rkky.layerIDFrom.push_back(jsonInt(jsonIndex(rkkyIds, idx)));
         l.rkky.constant.push_back(jsonDouble(jsonIndex(rkkyConstants, idx)));
         log << "junction[" << junctionNumber << "].layer[" << layerIndex << "].RKKY (J/m2)[" << idx
@@ -99,7 +100,7 @@ Layer Layer::fromJson(json* j, std::ostream& log, size_t junctionNumber, size_t 
             << ", Constant=" << l.rkky.constant[idx] << "}\n";
     }
 
-    json* flags = jsonAt(j, "Flags");
+    json *flags = jsonAt(j, "Flags");
     l.flags.free = jsonBool(jsonAt(flags, "Free"));
     l.flags.dipolar = jsonBool(jsonAt(flags, "Dipolar"));
     l.flags.callenCallen = jsonBool(jsonAt(flags, "Callen-Callen"));
@@ -120,7 +121,8 @@ Layer Layer::fromJson(json* j, std::ostream& log, size_t junctionNumber, size_t 
     return l;
 }
 
-Temperature Temperature::fromJson(json* j, std::ostream& log, size_t junctionNumber) {
+Temperature Temperature::fromJson(json *j, std::ostream &log, size_t junctionNumber)
+{
     Temperature t{};
     t.T0 = jsonDouble(jsonAt(j, "T0 (K)"));
     log << "junction[" << junctionNumber << "].Temperature.T0 (K) = " << t.T0 << "\n";
@@ -137,7 +139,8 @@ Temperature Temperature::fromJson(json* j, std::ostream& log, size_t junctionNum
     return t;
 }
 
-Pulse Pulse::fromJson(json* j, std::ostream& log, const std::string& label) {
+Pulse Pulse::fromJson(json *j, std::ostream &log, const std::string &label)
+{
     Pulse p{};
     p.flag = jsonBool(jsonAt(j, "flag"));
     p.type = jsonInt(jsonAt(j, "type"));
@@ -154,32 +157,39 @@ Pulse Pulse::fromJson(json* j, std::ostream& log, const std::string& label) {
     return p;
 }
 
-BiasChannel BiasChannel::fromJson(json* j, std::ostream& log, const std::string& label) {
+BiasChannel BiasChannel::fromJson(json *j, std::ostream &log, const std::string &label)
+{
     BiasChannel b{};
     b.flag = jsonBool(jsonAt(j, "flag"));
     log << label << ".flag = " << b.flag << "\n";
 
-    if (jsonContains(j, "A")) {
+    if (jsonContains(j, "A"))
+    {
         b.A = jsonDouble(jsonAt(j, "A"));
         log << label << ".A = " << b.A << "\n";
     }
-    if (jsonContains(j, "V")) {
+    if (jsonContains(j, "V"))
+    {
         b.V = jsonDouble(jsonAt(j, "V"));
         log << label << ".V = " << b.V << "\n";
     }
-    if (jsonContains(j, "phi")) {
+    if (jsonContains(j, "phi"))
+    {
         b.phi = jsonDouble(jsonAt(j, "phi"));
         log << label << ".phi = " << b.phi << "\n";
     }
-    if (jsonContains(j, "theta")) {
+    if (jsonContains(j, "theta"))
+    {
         b.theta = jsonDouble(jsonAt(j, "theta"));
         log << label << ".theta = " << b.theta << "\n";
     }
-    if (jsonContains(j, "H")) {
+    if (jsonContains(j, "H"))
+    {
         b.H = jsonDouble(jsonAt(j, "H"));
         log << label << ".H = " << b.H << "\n";
     }
-    if (jsonContains(j, "F")) {
+    if (jsonContains(j, "F"))
+    {
         b.F = jsonDouble(jsonAt(j, "F"));
         log << label << ".F = " << b.F << "\n";
     }
@@ -187,7 +197,8 @@ BiasChannel BiasChannel::fromJson(json* j, std::ostream& log, const std::string&
     return b;
 }
 
-SystemBias SystemBias::fromJson(json* j, std::ostream& log, const std::string& label) {
+SystemBias SystemBias::fromJson(json *j, std::ostream &log, const std::string &label)
+{
     SystemBias b{};
     b.dcCurrent = BiasChannel::fromJson(jsonAt(j, "DC current"), log, label + ".DC current");
     b.dcVoltage = BiasChannel::fromJson(jsonAt(j, "DC voltage"), log, label + ".DC voltage");
@@ -198,7 +209,8 @@ SystemBias SystemBias::fromJson(json* j, std::ostream& log, const std::string& l
     return b;
 }
 
-SweepRange SweepRange::fromJson(json* j, std::ostream& log, const std::string& label) {
+SweepRange SweepRange::fromJson(json *j, std::ostream &log, const std::string &label)
+{
     SweepRange r{};
     r.flag = jsonBool(jsonAt(j, "flag"));
     r.type = jsonString(jsonAt(j, "type"));
@@ -215,7 +227,8 @@ SweepRange SweepRange::fromJson(json* j, std::ostream& log, const std::string& l
     return r;
 }
 
-Simulation Simulation::fromJson(json* j, std::ostream& log) {
+Simulation Simulation::fromJson(json *j, std::ostream &log)
+{
     Simulation s{};
     s.dt = jsonDouble(jsonAt(j, "dt (s)"));
     log << "simulation.dt (s) = " << s.dt << "\n";
@@ -231,10 +244,11 @@ Simulation Simulation::fromJson(json* j, std::ostream& log) {
     log << "simulation.tmax (s) = " << s.tmax << "\n";
     s.saving = jsonBool(jsonAt(j, "saving"));
     log << "simulation.saving = " << s.saving << "\n";
-    json* savingColumnsArr = jsonAt(j, "saving columns");
+    json *savingColumnsArr = jsonAt(j, "saving columns");
     size_t savingColumnCount = jsonSize(savingColumnsArr);
     s.savingColumns.reserve(savingColumnCount);
-    for (size_t idx = 0; idx < savingColumnCount; ++idx) {
+    for (size_t idx = 0; idx < savingColumnCount; ++idx)
+    {
         s.savingColumns.push_back(jsonString(jsonIndex(savingColumnsArr, idx)));
         log << "simulation.saving columns[" << idx << "] = " << s.savingColumns.back() << "\n";
     }
@@ -263,9 +277,11 @@ Simulation Simulation::fromJson(json* j, std::ostream& log) {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Parses every element of a "layer" array until none are left.
-std::vector<Layer> parseLayerList(json* j, std::ostream& log, size_t junctionNumber) {
+std::vector<Layer> parseLayerList(json *j, std::ostream &log, size_t junctionNumber)
+{
     std::vector<Layer> layers;
-    for (size_t layerIndex = 0; layerIndex < jsonSize(j); ++layerIndex) {
+    for (size_t layerIndex = 0; layerIndex < jsonSize(j); ++layerIndex)
+    {
         layers.push_back(Layer::fromJson(jsonIndex(j, layerIndex), log, junctionNumber, layerIndex));
     }
     return layers;
@@ -273,27 +289,30 @@ std::vector<Layer> parseLayerList(json* j, std::ostream& log, size_t junctionNum
 
 // One junction = one mandatory "layer" block, optionally followed by a "Temperature"
 // block and a "junction-bias" block. blockIndex is advanced past whatever was consumed.
-Junction Junction::fromJson(json* j, std::ostream& log, size_t& blockIndex, size_t junctionNumber) {
+Junction Junction::fromJson(json *j, std::ostream &log, size_t &blockIndex, size_t junctionNumber)
+{
     Junction junction{};
-    
+
     junction.layers = parseLayerList(jsonAt(jsonIndex(j, blockIndex), "layer"), log, junctionNumber);
     ++blockIndex;
     junction.temperature = Temperature::fromJson(jsonAt(jsonIndex(j, blockIndex), "Temperature"), log, junctionNumber);
-    ++blockIndex;    
+    ++blockIndex;
     junction.junctionBias = SystemBias::fromJson(jsonAt(jsonIndex(j, blockIndex), "junction-bias"), log,
-     "junction[" + std::to_string(junctionNumber) + "].junction-bias");
+                                                 "junction[" + std::to_string(junctionNumber) + "].junction-bias");
     junction.hasJunctionBias = true;
-    ++blockIndex;    
+    ++blockIndex;
 
     return junction;
 }
 
 // Repeatedly calls Junction::fromJson, each call consuming the next 1-3 blocks of the
 // "junction" array, until the whole array has been consumed.
-std::vector<Junction> parseJunctionList(json* j, std::ostream& log) {
+std::vector<Junction> parseJunctionList(json *j, std::ostream &log)
+{
     std::vector<Junction> junctions;
     size_t blockIndex = 0;
-    while (blockIndex < jsonSize(j)) {
+    while (blockIndex < jsonSize(j))
+    {
         junctions.push_back(Junction::fromJson(j, log, blockIndex, junctions.size()));
     }
     return junctions;

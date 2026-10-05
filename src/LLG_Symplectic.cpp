@@ -1,13 +1,11 @@
 #include "objects.hpp"
-
 #include <cmath>
-
 #include "Constants.hpp"
 
 /********************************************************/
-void AdvanceIndividualSpin(Junction& junction, int nlayer, double timestep)
+void AdvanceIndividualSpin(Junction &junction, int nlayer, double timestep)
 {
-    auto& l = junction.layers[nlayer];
+    auto &l = junction.layers[nlayer];
     const double alpha = l.alpha;
     const double fact = gamma0 / (1.0 + alpha * alpha);
 
@@ -26,11 +24,12 @@ void AdvanceIndividualSpin(Junction& junction, int nlayer, double timestep)
 
     // Update m
     l.m = (m + timestep * omegaXm +
-           (timestep * timestep * 0.25) * (2.0 * omega * omegam - norm_omega2 * m)) / denom;
+           (timestep * timestep * 0.25) * (2.0 * omega * omegam - norm_omega2 * m)) /
+          denom;
 }
 
 /********************************************************/
-void LLG_Symplectic(Junction& junction, int nlayer1, int nlayer2, int tot_layers, double dt)
+void LLG_Symplectic(Junction &junction, int nlayer1, int nlayer2, int tot_layers, double dt)
 {
     // Update the effective fields for both layers
     CalcHeff(junction, nlayer1, tot_layers);
