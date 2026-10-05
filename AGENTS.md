@@ -12,8 +12,8 @@ CeCILL v2.1 (`Licence_CeCILL_V2.1-en.txt` — leave it alone).
 CMake >= 3.26, out of source. `Unix Makefiles` is the default generator on Linux:
 
 ```
-cmake -S . -B build
-cmake --build build -j
+cmake -B build .
+cmake --build build
 ```
 
 ```
