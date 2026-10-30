@@ -16,7 +16,6 @@
 using namespace std;
 using namespace std::chrono;
 
-/*****************************************************************************/
 void version(void)
 {
     printf("===================================================\n");
@@ -28,14 +27,14 @@ void version(void)
 
 int main(int argc, char **argv)
 {
-
     // MPI initialization
     MPI_Init(&argc, &argv);
     int task_id, total_task;
     MPI_Comm_rank(MPI_COMM_WORLD, &task_id);    // Get task ID (which MPI rank am I)
     MPI_Comm_size(MPI_COMM_WORLD, &total_task); // Get total number of MPI tasks
     if (task_id == 0)
-    { // Print the world size to be sure
+    { 
+        // Print the world size to be sure
         cout << "Number of MPI ranks: " << total_task << endl;
     }
     // So on a 10 nodes standard Q, total_task will be 10, and task_id will be 0 to 9
@@ -98,5 +97,5 @@ int main(int argc, char **argv)
     simulation.range(junctions, log, task_id, total_task);
 
     MPI_Finalize();
-    return 0;
+    return EXIT_SUCCESS;
 }
