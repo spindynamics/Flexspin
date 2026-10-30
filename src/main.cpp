@@ -20,9 +20,9 @@ using namespace std::chrono;
 void version(void)
 {
     printf("===================================================\n");
-    printf("Flexspin : Stochastic LLG program for multiple junction and layers \n");
-    printf("May 2026\n");
-    printf("Arthur Courberand\n");
+    printf("Flexspin: Stochastic LLG program for multiple junctions and layers\n");
+    printf("Version 1.0.0\n");
+    printf("SPINTEC Theory group\n");
     printf("===================================================\n");
 }
 
@@ -32,11 +32,11 @@ int main(int argc, char **argv)
     // MPI initialization
     MPI_Init(&argc, &argv);
     int task_id, total_task;
-    MPI_Comm_rank(MPI_COMM_WORLD, &task_id);    // Get task id (which task THIS FILE will be)
-    MPI_Comm_size(MPI_COMM_WORLD, &total_task); // Get total number of task
+    MPI_Comm_rank(MPI_COMM_WORLD, &task_id);    // Get task ID (which MPI rank am I)
+    MPI_Comm_size(MPI_COMM_WORLD, &total_task); // Get total number of MPI tasks
     if (task_id == 0)
     { // Print the world size to be sure
-        cout << " Node size: " << total_task << endl;
+        cout << "Number of MPI ranks: " << total_task << endl;
     }
     // So on a 10 nodes standard Q, total_task will be 10, and task_id will be 0 to 9
     MPI_Barrier(MPI_COMM_WORLD);
@@ -75,16 +75,17 @@ int main(int argc, char **argv)
         N_layer[i] = junctions[i].layers.size();
     }
 
-    // Seed each layer's thermal-noise generator once (decorrelated across MPI ranks
-    // via task_id*3), same scheme as before. Also clone dt/thermalField from Simulation
-    // onto each layer (constant for the whole run), so CalcHeff can see them without
-    // needing them threaded through every LLG solver's signature.
+    // Seed each layer's thermal-noise generator once (decorrelated by task_id and layer index).
+    // Initialize rngState to a negative value for ran2/gasdev to work correctly.
+    // Note: Using time(NULL) directly ensures different layers get different seeds.
     for (auto &junction : junctions)
     {
         for (auto &layer : junction.layers)
         {
-            srand(time(NULL) + task_id * 3);
-            layer.rngState = -rand();
+            // IMPORTANT: rand2/gasdev require a negative initial seed, and different
+            // layers must get different seeds to produce decorrelated thermal fluctuations.
+            // Using time(NULL) directly ensures different layers start with different seeds.
+            layer.rngState = -time(NULL);
             layer.dt = simulation.dt;
             layer.thermalField = simulation.thermalField;
         }
